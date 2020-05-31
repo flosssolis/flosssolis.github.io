@@ -1,0 +1,40 @@
+body{
+margin-top: 50px ;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+#game{
+
+    width: 234px;
+    height: 234px;
+    background-color: rgba(91, 59, 233, 0.418);
+    border-radius: 5px;
+   
+ 
+}
+
+.block{
+    position: static;
+    background-color: rgba(90, 70, 180, 0.548);
+    display: inline-block;
+    width: 75px;
+    height: 75px;
+    border-radius: 5px;
+    margin: 5px;
+    box-shadow: 0 0 10px rgba(72, 211, 216, 0.897);
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    margin: auto;
+    
+}
+
+#display{
+    margin-top: 20px;
+    width:227px ;
+    height: 30px;
+    border:solid 2px rgba(72, 211, 216, 0.384);
+    border-radius: 5px;
+}   
