@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .taskList {
+        width: 920px;
+        margin: 0 auto;
+      }
+
+      ul li {
+        font-family: Arial, Helvetica, sans-serif;
+        cursor: pointer;
+        position: relative;
+        padding: 12px 8px 12px 40px;
+        background: #eee;
+        font-size: 18px;
+        transition: 0.2s;
+      }
+
+      .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 12px 16px 12px 16px;
+      }
+
+      .close:hover {
+        background-color: #ff635b;
+        color: white;
+      }
+
+      .header {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: rgb(140, 147, 240);
+        padding: 30px 40px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        height: 400px;
+        border-radius: 9px;
+      }
+
+      input {
+        font-family: Arial, Helvetica, sans-serif;
+        border: none;
+        width: 75%;
+        padding: 10px;
+        float: left;
+        font-size: 16px;
+        border-top-left-radius: 9px;
+        border-bottom-left-radius: 9px;
+      }
+      ul li.checked {
+        color: #fff;
+        color: #555;
+        text-decoration: line-through;
+      }
+
+      .addBtn {
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 10px;
+        width: 25%;
+        background: #d9d9d9;
+        color: #555;
+        float: left;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-top-right-radius: 9px;
+        border-bottom-right-radius: 9px;
+      }
+
+      .addBtn:hover {
+        background-color: #bbb;
+      }
+    </style>
+    <title>to do list</title>
+  </head>
+  <body>
+    <div class="taskList">
+      <div class="header">
+        <h1>to do list</h1>
+        <input type="text" placeholder="enter new task..." id="addTask" />
+        <span class="addBtn" onclick="newElement()">add</span>
+      </div>
+      <ul id="list"></ul>
+    </div>
+    <script>
+      let list = document.querySelector("ul");
+
+      function newElement() {
+        let li = document.createElement("li");
+        let inputValue = document.getElementById("addTask").value;
+        let text = document.createTextNode(inputValue);
+        li.appendChild(text);
+        if (inputValue == "") {
+          return;
+        } else {
+          document.getElementById("list").appendChild(li);
+        }
+        document.getElementById("addTask").value = "";
+        let span = document.createElement("SPAN");
+        let close = document.createTextNode("X");
+        span.className = "close";
+        span.appendChild(close);
+        li.appendChild(span);
+      }
+
+      list.addEventListener("click", function (e) {
+        if (e.target.tagName === "LI") {
+          e.target.classList.toggle("checked");
+        } else if (e.target.tagName === "SPAN") {
+          let abc = e.target.parentNode;
+          abc.remove();
+        }
+      });
+    </script>
+  </body>
+</html>
