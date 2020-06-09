@@ -59,7 +59,16 @@
         color: #555;
         text-decoration: line-through;
       }
+      ul {
+        list-style: none;
+      }
 
+      .edit {
+        background-color: transparent;
+        margin-bottom: 10px;
+        height: 20px;
+        width: 50px;
+      }
       .addBtn {
         font-family: Arial, Helvetica, sans-serif;
         padding: 10px;
@@ -78,6 +87,11 @@
       .addBtn:hover {
         background-color: #bbb;
       }
+      .check {
+        height: 15px;
+        width: 15px;
+        padding-right: 10px;
+      }
     </style>
     <title>to do list</title>
   </head>
@@ -92,12 +106,19 @@
     </div>
     <script>
       let list = document.querySelector("ul");
+      let li = document.querySelector("li");
 
       function newElement() {
         let li = document.createElement("li");
         let inputValue = document.getElementById("addTask").value;
         let text = document.createTextNode(inputValue);
+
         li.appendChild(text);
+        let check = document.createElement("input");
+        check.setAttribute("type", "checkbox");
+        check.setAttribute("class", "check");
+        li.appendChild(check);
+
         if (inputValue == "") {
           return;
         } else {
@@ -112,13 +133,34 @@
       }
 
       list.addEventListener("click", function (e) {
-        if (e.target.tagName === "LI") {
+        if (e.target.tagName === "INPUT") {
           e.target.classList.toggle("checked");
         } else if (e.target.tagName === "SPAN") {
           let abc = e.target.parentNode;
           abc.remove();
         }
       });
+
+      
+      function edit() {
+        let lis = document.querySelectorAll("li");
+        for (let i = 0; i < lis.length; i++) {
+          lis[i].addEventListener("contextmenu", function func() {
+            console.log(i);
+            let edit = document.createElement("input");
+            edit.value = this.innerHTML;
+            this.innerHTML = "";
+            this.appendChild(edit);
+
+            let li = this;
+            input.addEventListener("blur", function () {
+              li.innerHTML = this.value;
+              td.addEventListener('click', func);
+            });
+            this.removeEventListener("click", func);
+          });
+        }
+      }
     </script>
   </body>
 </html>
