@@ -153,9 +153,9 @@
             this.appendChild(edit);
 
             let li = this;
-            input.addEventListener("blur", function () {
+            edit.addEventListener("blur", function () {
               li.innerHTML = this.value;
-              td.addEventListener('click', func);
+              li.addEventListener('click', func);
             });
             this.removeEventListener("click", func);
           });
