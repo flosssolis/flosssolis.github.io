@@ -1,18 +1,28 @@
 const table = document.getElementById("field");
 const btn = document.getElementsByClassName("newGame");
-const tScore = document.querySelectorAll(".score");
-const win = document.querySelectorAll("game-win");
-const over = document.querySelectorAll("game-over");
+const totalScore = document.querySelector(".score");
+const bestScore = document.querySelector(".best");
+//const tScore = document.querySelectorAll(".score");
+const overlayOver = document.querySelector(".game-over");
+const overlayWin = document.querySelector(".game-win");
 const size = 4;
 
 class Game {
   constructor() {
     this.field = document.getElementById("field");
     this.data = [];
-    this.tds = [];
+
+    bestScore.innerHTML = localStorage["localBestScore"];
+
+    if (localStorage["localBestScore"] == undefined) {
+      localStorage["localBestScore"] = 0;
+      bestScore.innerHTML = localStorage["localBestScore"];
+    }
+
     //this.busyCells = [];
     //console.log(this.data);
-
+    let btn = document.querySelectorAll('.newGame');
+    btn.forEach(elem => elem.addEventListener('click', () => this.newGame()));
     this.createTable();
     this.randomTd();
     this.randomValue();
@@ -39,18 +49,35 @@ class Game {
   };
 
   addCell = () => {
-    this.cellslist = [...document.querySelectorAll("td")];
-    this.cell = this.randomTd(0, 15);
+    //console.log("add cell");
+    // берем все td, фильтруем свободные
+    let tds = [...document.querySelectorAll("td")];
+    const cellslist = tds.filter((td) => +td.dataset.score === 0);
 
-    if (this.cellslist[this.cell].dataset.score == 0) {
-      this.cellslist[this.cell].dataset.score = this.randomValue();
-      this.cellslist[this.cell].innerHTML = this.cellslist[
-        this.cell
-      ].dataset.score;
-    } else {
-      this.addCell();
+    // 0 свободных - проиграл
+    if (cellslist.length === 0) {
+      this.gameOver();
+
+      return;
     }
+
+    function checkValue(td) {
+      return td.dataset.score == 2048;
+    }
+
+    if (tds.find(checkValue) !== undefined ){
+      this.getWin();
+      return;
+    }
+      // берем рандомный индекс из списка ячеек
+      const randomInt = this.randomTd(0, cellslist.length - 1);
+
+    // сетаем
+    cellslist[randomInt].dataset.score = this.randomValue();
+    cellslist[randomInt].innerHTML = cellslist[randomInt].dataset.score;
     //console.log(this.cell);
+
+    this.addClass(cellslist[randomInt], "appear");
   };
 
   randomTd = (min, max) => {
@@ -58,83 +85,308 @@ class Game {
   };
 
   randomValue = () => {
-    if (Math.random() > 0.75) return 4;
+    if (Math.random() > 0.9) return 4;
     return 2;
   };
 
   sumCellsUp = () => {
-    this.count = 0;
-
-    while (this.count < 4) {
-      for (let i = 3; i >= 0; i--) {
+    let count = 0;
+    let score = 0;
+    while (count <= 4) {
+      for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 4; j++) {
           //console.log(this.data[i][j]);
-          this.currentCell = this.data[i][j];
-          this.upperCell = this.data[i][j - 1];
+          // идем снизу вверх начиная с первого индекса т.е.
 
-          if (this.currentCell.dataset.score != 0) {
+          // [0, 0, 0, 0]
+          // [2, 0, 0, 0]
+          // [0, 0, 0, 0]
+          // [2, 0, 0, 0]
+
+          // за одну итерацию двойного цикла перейдет в такое состояние, из-за этого несколько циклов чтобы блин перенеслось =>
+
+          // [2, 0, 0, 0]
+          // [0, 0, 0, 0]
+          // [2, 0, 0, 0]
+          // [0, 0, 0, 0]
+
+          this.currentCell = this.data[i + 1][j];
+          this.upperCell = this.data[i][j];
+
+          // только если одна из клеток не пустая, совершаем какие-то действия
+          if (
+            this.currentCell.dataset.score != 0 ||
+            this.upperCell.dataset.score != 0
+          ) {
             if (
-              this.currentCell.dataset.score == this.upperCell.dataset.score
+              this.currentCell.dataset.score == this.upperCell.dataset.score &&
+              // суммируем в конце, когда все сдвинули, но после єтого еще раз сдвигаем, для этого count <= 4!
+              count === 3
             ) {
-              this.currentCell.innerHTML =
-                this.currentCell.innerHTML + this.upperCell.innerHTML;
-              this.currentCell.dataset.score =
-                this.currentCell.dataset.score + this.upperCell.dataset.score;
+              // add logic
+              this.upperCell.innerHTML =
+                +this.currentCell.innerHTML + +this.upperCell.innerHTML;
+              this.upperCell.dataset.score =
+                +this.currentCell.dataset.score + +this.upperCell.dataset.score;
 
-              this.upperCell.innerHTML = "";
-              this.upperCell.dataset.score = 0;
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+
+              score += +this.upperCell.dataset.score;
+
+              this.addClass(this.upperCell, "pop");
             }
-            return;
+
+            // если сверху пусто то двигаем хули, тут логика простая
+            if (this.upperCell.dataset.score == 0) {
+              this.upperCell.innerHTML = +this.currentCell.innerHTML;
+              this.upperCell.dataset.score = +this.currentCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+            }
+          }
+        }
+      }
+
+      count++;
+    }
+
+    this.addCell();
+    this.alertScore(score);
+  };
+
+  sumCellsDown = () => {
+    let score = 0;
+    let count = 0;
+
+    while (count <= 4) {
+      for (let i = 3; i > 0; i--) {
+        for (let j = 0; j < 4; j++) {
+          this.currentCell = this.data[i - 1][j];
+          this.lowerCell = this.data[i][j];
+
+          if (
+            this.currentCell.dataset.score != 0 ||
+            this.lowerCell.dataset.score != 0
+          ) {
+            if (
+              this.currentCell.dataset.score == this.lowerCell.dataset.score &&
+              count === 3
+            ) {
+              this.lowerCell.innerHTML =
+                +this.currentCell.innerHTML + +this.lowerCell.innerHTML;
+              this.lowerCell.dataset.score =
+                +this.currentCell.dataset.score + +this.lowerCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+
+              score += +this.lowerCell.dataset.score;
+
+              this.addClass(this.lowerCell, "pop");
+            }
+
+            if (this.lowerCell.dataset.score == 0) {
+              this.lowerCell.innerHTML = +this.currentCell.innerHTML;
+              this.lowerCell.dataset.score = +this.currentCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+            }
           }
         }
       }
       count++;
     }
-  };
-
-  sumCellsDown = () => {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        this.cage = this.data[i][j];
-      }
-    }
+    this.addCell();
+    this.alertScore(score);
   };
 
   sumCellsLeft = () => {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 3; j >= 0; j--) {
-        this.cage = this.data[i][j];
+    let score = 0;
+    let count = 0;
+    while (count <= 4) {
+      for (let i = 0; i < 4; i++) {
+        for (let j = 1; j < 4; j++) {
+          this.currentCell = this.data[i][j];
+          this.leftCell = this.data[i][j - 1];
+
+          if (
+            this.currentCell.dataset.score != 0 ||
+            this.leftCell.dataset.score != 0
+          ) {
+            if (
+              this.currentCell.dataset.score == this.leftCell.dataset.score &&
+              count === 3
+            ) {
+              this.leftCell.innerHTML =
+                +this.currentCell.innerHTML + +this.leftCell.innerHTML;
+              this.leftCell.dataset.score =
+                +this.currentCell.dataset.score + +this.leftCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+
+              score += +this.leftCell.dataset.score;
+
+              this.addClass(this.leftCell, "pop");
+            }
+
+            if (this.leftCell.dataset.score == 0) {
+              this.leftCell.innerHTML = +this.currentCell.innerHTML;
+              this.leftCell.dataset.score = +this.currentCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+            }
+          }
+        }
       }
+      count++;
     }
+    this.addCell();
+    this.alertScore(score);
   };
 
   sumCellsRight = () => {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        this.cage = this.data[i][j];
+    let score = 0;
+
+    let count = 0;
+    while (count <= 4) {
+      for (let i = 0; i < 4; i++) {
+        for (let j = 2; j >= 0; j--) {
+          this.currentCell = this.data[i][j];
+          this.rightCell = this.data[i][j + 1];
+
+          if (
+            this.currentCell.dataset.score != 0 ||
+            this.rightCell.dataset.score != 0
+          ) {
+            if (
+              this.currentCell.dataset.score == this.rightCell.dataset.score &&
+              count === 3
+            ) {
+              this.rightCell.innerHTML =
+                +this.currentCell.innerHTML + +this.rightCell.innerHTML;
+              this.rightCell.dataset.score =
+                +this.currentCell.dataset.score + +this.rightCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+
+              score += +this.rightCell.dataset.score;
+
+              this.addClass(this.rightCell, "pop");
+            }
+
+            if (this.rightCell.dataset.score == 0) {
+              this.rightCell.innerHTML = +this.currentCell.innerHTML;
+              this.rightCell.dataset.score = +this.currentCell.dataset.score;
+
+              this.currentCell.innerHTML = "";
+              this.currentCell.dataset.score = 0;
+            }
+          }
+        }
       }
+      count++;
     }
+    this.addCell();
+    this.alertScore(score);
   };
 
   addEvents = () => {
-    window.addEventListener("keydown", (e) => {
-      if (e.keyCode == 37)
-        // left arrow
-        this.sumCellsLeft();
-
-      if (e.keyCode == 38)
-        // top arrow
-        this.sumCellsUp();
-
-      if (e.keyCode == 39)
-        // right arrow
-        this.sumCellsRight();
-
-      if (e.keyCode == 40)
-        // down arrow
-        this.sumCellsDown();
-    });
+    window.addEventListener("keydown", this.addEventsFunc);
   };
+
+  addEventsFunc = (e) => {
+    if (e.keyCode == 37) {
+      // left arrow
+      this.sumCellsLeft();
+    }
+
+    if (e.keyCode == 38) {
+      // top arrow
+      this.sumCellsUp();
+    }
+
+    if (e.keyCode == 39)
+      // right arrow
+      this.sumCellsRight();
+
+    if (e.keyCode == 40)
+      // down arrow
+      this.sumCellsDown();
+  };
+
+  addClass(tile, cl) {
+    tile.classList.add(cl);
+    setTimeout(() => tile.classList.remove(cl), 1000);
+  }
+
+  alertScore(score) {
+    if (score == 0) return;
+    let parentScore = document.querySelector(".score-addition-parent");
+    parentScore.innerHTML = "";
+    let addScore = document.createElement("div");
+
+    addScore.innerHTML = "+" + score;
+    addScore.classList.add("move-up");
+    addScore.classList.add("score-addition");
+
+    totalScore.innerHTML = +totalScore.innerHTML + +score;
+    this.addBestScore();
+
+    parentScore.appendChild(addScore);
+  }
+
+  addBestScore() {
+    if (+bestScore.innerHTML > +totalScore.innerHTML) return;
+    bestScore.innerHTML = totalScore.innerHTML;
+    localStorage["localBestScore"] = bestScore.innerHTML;
+  }
+
+  gameOver() {
+    // this.removeEvents();
+    overlayOver.style.cssText = "display: flex";
+    overlayOver.classList.add("fade-in");
+    this.removeEvents();
+  }
+
+  getWin() {
+    overlayWin.style.cssText = "display: flex";
+    overlayWin.classList.add("fade-in");
+    this.removeEvents();
+  }
+
+  removeEvents() {
+    window.removeEventListener("keydown", this.addEventsFunc);
+  }
+
+
+  newGame() {
+
+    const cells = document.querySelectorAll('td');
+    cells.forEach(elem => {
+      elem.innerHTML = '';
+      elem.dataset.score = 0;
+    });
+    this.addCell();
+    this.addCell();
+
+    totalScore.innerHTML = 0;
+
+    overlayOver.style.cssText = 'display: none;';
+    overlayOver.classList.remove('fade-in');
+
+    overlayWin.style.cssText = 'display: none;';
+    overlayWin.classList.remove('fade-in');
+
+  }
+
+
+
 }
 
 // TODO#1
