@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#ECC400" />
+    <!-- <link rel="shortcut icon" href="favicon.ico" /> -->
+    <!-- reuse same icon for Safari -->
+    <!-- <link rel="apple-touch-icon" href="logos/logo-192.png" /> -->
+    <title>2048</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Add manifest -->
+
+    <!-- <link rel="manifest" href="manifest.json" /> -->
+  </head>
+
+  <body>
+    <header>
+      <div class="score-container">
+        <h1>2048</h1>
+        <div class="total-score">
+          Score:
+          <br />
+          <span class="score">0</span>
+          <div class="score-addition-parent"></div>
+        </div>
+        <div class="best-score">
+          Best:
+          <br />
+          <span class="best">0</span>
+        </div>
+      </div>
+      <div class="description">
+        <div class="text">
+          <h2>Play 2048 Game Online</h2>
+          <p>Join the numbers and get to the 2048 tile</p>
+        </div>
+        <button class="newGame">New Game</button>
+      </div>
+      <div class="game-over">
+        <p>Game over, братан</p>
+        <button class="newGame">New Game</button>
+      </div>
+      <div class="game-win">
+        <p>
+          This is победа, братан.
+        </p>
+        <button class="newGame">New Game</button>
+      </div>
+      
+    </header>
+    
+    <table id="field" cellspacing="10px"></table>
+<p>dedicated to Likbes</p>
+    
+    <script src="script.js"></script>
+    <script src="swipes.js"></script>
+  </body>
+</html>
