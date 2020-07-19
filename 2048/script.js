@@ -103,7 +103,7 @@ class Game {
           // [0, 0, 0, 0]
           // [2, 0, 0, 0]
 
-          // за одну итерацию двойного цикла перейдет в такое состояние, из-за этого несколько циклов чтобы блин перенеслось =>
+          // за одну итерацию двойного цикла перейдет в такое состояние, из-за этого несколько циклов чтобы перенеслось =>
 
           // [2, 0, 0, 0]
           // [0, 0, 0, 0]
@@ -137,7 +137,7 @@ class Game {
               this.addClass(this.upperCell, "pop");
             }
 
-            // если сверху пусто то двигаем хули, тут логика простая
+            // если сверху пусто то двигаем
             if (this.upperCell.dataset.score == 0) {
               this.upperCell.innerHTML = +this.currentCell.innerHTML;
               this.upperCell.dataset.score = +this.currentCell.dataset.score;
