@@ -298,6 +298,22 @@ class Game {
 
   addEvents = () => {
     window.addEventListener("keydown", this.addEventsFunc);
+    
+    window.addEventListener('swiped-up', () => {
+      this.sumCellsUp();
+    });
+
+    window.addEventListener('swiped-down', () => {
+      this.sumCellsDown();
+    });
+
+    window.addEventListener('swiped-left', () => {
+      this.sumCellsLeft();
+    });
+
+    window.addEventListener('swiped-right', () => {
+      this.sumCellsRight();
+    });
   };
 
 
@@ -323,22 +339,6 @@ class Game {
       // down arrow
       this.sumCellsDown();
 
-
-      window.addEventListener('swiped-up', () => {
-        this.sumCellsUp();
-      });
-  
-      window.addEventListener('swiped-down', () => {
-        this.sumCellsDown();
-      });
-  
-      window.addEventListener('swiped-left', () => {
-        this.sumCellsLeft();
-      });
-  
-      window.addEventListener('swiped-right', () => {
-        this.sumCellsRight();
-      });
     }
 
 
