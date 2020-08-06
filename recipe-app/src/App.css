@@ -1,0 +1,93 @@
+.App {
+  /* padding-top: 30px; */
+  text-align: center;
+  background-image: url(https://www.foodiesfeed.com/wp-content/uploads/2019/02/messy-pizza-on-a-black-table.jpg);
+  background-position: center;
+  background-attachment: fixed;
+  background-size: 100%;
+  /* background-color: rgb(221, 204, 185); */
+  /* background: rgb(255, 121, 121);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 121, 121, 0.6415362731152205) 0%,
+    rgba(255, 192, 17, 0.7894736842105263) 86% */
+  /* ); */
+}
+.header {
+  color: white;
+  font-size: 45px;
+  padding-right: 20px;
+  padding-bottom: 7px;
+  
+}
+
+.recipe {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgba(255, 255, 255, 0.753);
+  border-radius: 10px;
+margin-top: 20px;
+padding-top: 20px;
+padding-bottom: 20px;
+  
+}
+
+.body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  padding-top: 30px;
+  background-color: rgba(190, 190, 189, 0.356);
+}
+
+.search-bar {
+  border: transparent;
+  width: 30%;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.search-button {
+  border: transparent;
+  width: 15%;
+  height: 32px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  background-color: tomato;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inrgedients-ol {
+  display: inline;
+}
+
+li {
+  list-style-type: none;
+  margin-left: 0px;
+  /* Убираем маркеры */
+}
+.images {
+  border-radius: 10px;
+}
+
+.title {
+  color: rgb(65, 65, 65);
+}
+
+.search-button:hover {
+  border: transparent;
+  width: 15%;
+  height: 32px;
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  background-color: rgba(190, 190, 189, 0.514);
+  transition: .3s;
+}
