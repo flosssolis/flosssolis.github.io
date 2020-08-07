@@ -1,0 +1,64 @@
+.App {
+  /* background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(191, 45, 253, 1) 100%
+  ); */
+  background-color: rgba(2, 8, 31, 0.925);
+  /* width: 100%;
+  height: auto; */
+}
+
+.header-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+
+.body {
+  padding-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.header {
+  margin: 0px;
+  font-size: 50px;
+  color: white;
+}
+
+.header-btns {
+  margin-top: 15px;
+}
+
+.btn {
+  background-color: transparent;
+  border: solid 1px white;
+  color: white;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-left: 40px;
+  padding: 20px;
+}
+
+.btn:hover {
+  background-color: rgba(255, 255, 255, 0.822);
+  border: solid 1px rgb(37, 170, 211);
+  color: rgb(37, 170, 211);
+  transition: 0.2s;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn.active {
+  background-color: rgba(255, 255, 255, 0.822);
+  border: solid 1px rgb(37, 170, 211);
+  color: rgb(37, 170, 211);
+}

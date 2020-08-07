@@ -1,0 +1,72 @@
+.App {
+  /* background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(191, 45, 253, 1) 100%
+  ); */
+  background-color: rgba(2, 2, 20, 0.959);
+  background-size: 100%;
+}
+
+.header-board {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+
+  margin-bottom: 50px;
+}
+
+.body {
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+.header {
+  margin-bottom: 40px;
+  margin-right: 200px;
+  font-size: 50px;
+  color: white;
+}
+
+.gif {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* flex-direction: ; */
+}
+
+.search-bar {
+  width: 300px;
+  height: 40px;
+  border: transparent;
+  border-radius: 20px;
+}
+
+.search-button {
+  background-color: rgba(255, 255, 255, 0.562);
+  width: 80px;
+  color: rgba(0, 0, 0, 0.863);
+  height: 40px;
+  font-size: 15px;
+  margin-left: 20px;
+  border: transparent;
+  border-radius: 20px;
+}
+
+.search-button:hover {
+  background-color: rgba(255, 255, 255, 0.822);
+  transition: 0.2s;
+}
+
+.search-form {
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
