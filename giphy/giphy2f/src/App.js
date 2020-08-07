@@ -14,7 +14,7 @@ const App = () => {
 
   const getGifs = async () => {
     const response = await fetch(
-      `http://api.giphy.com/v1/gifs/search?q=${query}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
+      `https://api.giphy.com/v1/gifs/search?q=${query}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
     );
     const data = await response.json();
     // const imgs = data.data;

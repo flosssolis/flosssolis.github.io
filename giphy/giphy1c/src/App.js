@@ -19,7 +19,7 @@ class App extends React.Component {
   loadGifs = (text) => {
     this.setState({ actBtn: text });
     fetch(
-      `http://api.giphy.com/v1/gifs/search?q=${text}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
+      `https://api.giphy.com/v1/gifs/search?q=${text}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
     )
       .then((data) => data.json())
       .then((gifs) => {
