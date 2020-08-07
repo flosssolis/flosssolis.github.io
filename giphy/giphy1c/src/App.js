@@ -8,12 +8,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       data: [],
-      actBtn: "cats",
+      actBtn: "Cats",
     };
   }
 
   componentDidMount = () => {
-    this.loadGifs("cats");
+    this.loadGifs("Cats");
   };
 
   loadGifs = (text) => {
