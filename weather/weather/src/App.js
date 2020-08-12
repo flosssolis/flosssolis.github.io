@@ -5,13 +5,14 @@ import Button from "./Buttons";
 
 const App = () => {
   const [weather, setWeather] = useState([]);
-  const [farenh, toFarenheit] = useState([]);
-  const [kelvin, toKelvin] = useState([]);
+  const [temp, setTemp] = useState([]);
   const [location, setLocation] = useState([]);
   const [description, setDescription] = useState([]);
   const [icon, setIcon] = useState([]);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("kyiv");
+  const [actBtn, setBtn] = useState("Celcium");
+  const titles = ["Celcium", "Kelvin", "Farenheit"];
 
   useEffect(() => {
     getWeather();
@@ -22,14 +23,12 @@ const App = () => {
       `https://api.openweathermap.org/data/2.5/weather?q=${query}&lang=en&units=metric&exclude=current&appid=64f51859a85fc1dfd98782a9e38e4859`
     );
     const data = await response.json();
-    const titles = ["Celcium", "kelvin", "Farenheit"];
+    setBtn('Celcium');
     setWeather(data.main.temp);
-    toFarenheit((weather * 9) / 5 + 32);
-    toKelvin(weather + 273.15);
+    setTemp(data.main.temp);
     setLocation(data.name);
     setDescription(data.weather[0].description);
     setIcon(data.weather[0].description);
-    //console.log(farenh);
   };
 
   const updateSearch = (e) => {
@@ -40,10 +39,6 @@ const App = () => {
     e.preventDefault();
     setQuery(search);
   };
-
-  // const setFarenheit=()=>{
-  //  weather = farenh;
-  // }
 
   return (
     <div className="body">
@@ -63,13 +58,31 @@ const App = () => {
         </button>
       </form>
       <div className="converter">
-        <Button celc={"Celcium   "} farenh={"Farenheit   "} kelvin={"Kelvin"} />
+        {titles.map((title) => (
+          <Button
+            text={title}
+            handleClick={() => {
+              title == "Farenheit"
+                ? setWeather((temp * 9) / 5 + 32)
+                : title == "Kelvin"
+                ? setWeather(temp + 273, 15)
+                : setWeather(temp);
+              title == "Farenheit"
+                ? setBtn(title)
+                : title == "Kelvin"
+                ? setBtn(title)
+                : setBtn(title);
+            }}
+            style={{
+              height: actBtn == title ? "10px" : "15px",
+              color: actBtn == title ? "orange" : "white",
+            }}
+          />
+        ))}
       </div>
       <div className="display">
         <Display
-          tempr={weather + "°C"}
-          farenheit={farenh + "°F"}
-          kelvins={kelvin + "°K"}
+          tempr={weather + "°"}
           locat={location}
           desc={description}
           icon={description}
@@ -80,13 +93,3 @@ const App = () => {
 };
 
 export default App;
-
-// <button className="btn" type="submit">
-//           Celcium
-//         </button>
-//         <button className="btn" type="submit">
-//           Kelvin
-//         </button>
-//         <button className="btn" type="submit">
-//           Farenheit
-//         </button>
