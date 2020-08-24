@@ -4,7 +4,7 @@ import Button from "./Buttons";
 
 const titles = ["Reactions", "Cats", "Dogs", "Food"];
 class App extends React.Component {
-  constructor(props) {
+  constructor(props:string) {
     super(props);
     this.state = {
       data: [],
@@ -16,17 +16,20 @@ class App extends React.Component {
     this.loadGifs("Cats");
   };
 
-  loadGifs = (text) => {
+  loadGifs = (text:string) => {
     this.setState({ actBtn: text });
     fetch(
       `https://api.giphy.com/v1/gifs/search?q=${text}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
     )
       .then((data) => data.json())
       .then((gifs) => {
-        const urls = gifs.data.reduce((arr, gifObj) => {
-          const url = gifObj.images.fixed_width.url;
-          return [...arr, url];
-        }, []);
+        const urls: string = gifs.data.reduce(
+          (arr: { [key: string]: any }, gifObj:{ [key: string]: any }) => {
+            const url: string = gifObj.images.fixed_width.url;
+            return [...arr, url];
+          },
+          []
+        );
         this.setState({ data: urls });
         console.log();
       });

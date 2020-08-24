@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Recipe from "./Recipes";
 import "./App.css";
+import { promises } from "fs";
+
+
 
 const App = () => {
-  const APP_ID = "02543ad8";
-  const APP_KEY = "83b166e7f5045e5ff53bac48969330db";
+  const APP_ID: string = "02543ad8";
+  const APP_KEY: string = "83b166e7f5045e5ff53bac48969330db";
 
-  const [recipes, setRecipes] = useState([]);
-  const [search, setSearch] = useState("");
-  const [query, setQuery] = useState("bread");
+  const [recipes, setRecipes] = useState<string[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [query, setQuery] = useState<string>("bread");
 
   useEffect(() => {
     getRecipes();
@@ -18,18 +21,21 @@ const App = () => {
     const response = await fetch(
       `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`
     );
-    const data = await response.json();
+    const data:{ [key: string]: any } = await response.json();
+    console.log(data);
     setRecipes(data.hits);
   };
 
-  const updateSearch = (e) => {
+  const updateSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  const getSearch = (e) => {
+  const getSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQuery(search);
   };
+
+
 
   return (
     <div className="App">
@@ -46,7 +52,7 @@ const App = () => {
             Search
           </button>
         </form>
-        {recipes.map((recipe) => (
+        {recipes.map((recipe:any) => (
           <Recipe
             key={recipe.recipe.label}
             title={recipe.recipe.label}
@@ -59,5 +65,7 @@ const App = () => {
     </div>
   );
 };
+
+
 
 export default App;

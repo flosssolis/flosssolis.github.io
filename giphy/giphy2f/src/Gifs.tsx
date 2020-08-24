@@ -1,6 +1,6 @@
 import React from "react";
 
-const Gif = ({ img }) => {
+const Gif = ({ img }: { img: string }) => {
   return (
     <div className="gif">
       <img src={img}></img>

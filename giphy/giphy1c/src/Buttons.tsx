@@ -1,7 +1,11 @@
 import React from "react";
 //import style from './App.css';
 
-class Button extends React.Component {
+interface IProps {
+  
+}
+
+class Button extends React.Component<IProps> {
   render() {
     const { text, handleClick, style } = this.props;
     return (
