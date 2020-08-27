@@ -102,6 +102,14 @@ const App = () => {
     margin-bottom: 20px;
   `;
 
+  const BTN = styled.button`
+  padding-top: 0px;
+  background-color: transparent;
+  border: none;
+  font-size: 17px;
+  color: rgb(255, 255, 255);
+`;
+
   return (
     <Body>
       <Title>

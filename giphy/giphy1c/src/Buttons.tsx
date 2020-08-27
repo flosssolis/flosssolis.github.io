@@ -2,7 +2,9 @@ import React from "react";
 //import style from './App.css';
 
 interface IProps {
-  
+  text:string;
+  handleClick:()=>void;
+  style:React.CSSProperties;
 }
 
 class Button extends React.Component<IProps> {

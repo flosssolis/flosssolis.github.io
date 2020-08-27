@@ -1,66 +1,48 @@
 import React, { useEffect, useState } from "react";
-import Gif from "./Gifs";
-
 import "./App.css";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Gif from "./Gifs";
+import Nav from "./Nav";
+import Trend from "./Trend";
+import Food from "./Food";
+import Pets from "./Pets";
+import Home from "./Home";
 
 const App = () => {
-  const [gifs, setGifs] = useState<{[key:string]: any}>([]);
-  const [search, setSearch] = useState<string>("");
-  const [query, setQuery] = useState<string>("trend");
-
+  const [gifs, setGifs] = useState<{ [key: string]: any }>([]);
+  const [actBtn, setBtn] = useState<string>("");
+  const [query, setQuery] = useState<string>("home");
   useEffect(() => {
     getGifs();
   }, [query]);
 
   const getGifs = async () => {
     const response = await fetch(
-      `https://api.giphy.com/v1/gifs/search?q=${query}&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
+      `https://api.giphy.com/v1/gifs/search?q=home&api_key=hPK1vu1HwbBeKgCzgHqclkWCMcjbZZjt&limit=49`
     );
-    const data:{[key:string]: any} = await response.json();
-    // const imgs = data.data;
+    const data: { [key: string]: any } = await response.json();
     console.log(data.data);
     setGifs(data.data);
   };
 
-  const updateSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const getSearch = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setQuery(search);
-  };
-
   return (
     <div className="App">
-      <div className="body">
-        <div className="header-board">
-          <h1 className="header">Giphy clone</h1>
-          <form onSubmit={getSearch} className="search-form">
-            <input
-              className="search-bar"
-              type="text"
-              value={search}
-              onChange={updateSearch}
-            />
-            <button className="search-button" type="submit">
-              Search
-            </button>
-          </form>
+      <Router>
+        <div className="body">
+          <div>
+            <div className="header-board">
+              <h1 className="header">Giphy</h1>
+            </div>
+          </div>
+          <Nav />
+          <Switch>
+            <Route path="/trend" component={Trend} />
+            <Route path="/pets" component={Pets} />
+            <Route path="/food" component={Food} />
+            <Route path="/" component={Home} />
+          </Switch>
         </div>
-
-        {/* <div className="btns">
-          <Button text="Reactions" value={search} handleClick={updateSearch} />
-          <Button text="Sport" handleClick={getGifs} />
-          <Button text="Artists" handleClick={getGifs} />
-          <Button text="Entertainment" handleClick={getGifs} />
-        </div> */}
-        <div className="container">
-          {gifs.map((gif:{[key:string]: any}) => (
-            <Gif img={gif.images.fixed_width.url} />
-          ))}
-        </div>
-      </div>
+      </Router>
     </div>
   );
 };
