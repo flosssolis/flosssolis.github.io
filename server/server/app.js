@@ -7,6 +7,11 @@ const app = express();
 
 const PORT = 3005;
 
+mongoose.connect("3158377e-d4b1-4e5c-a950-6530100e266e", {
+  useNewUrlParser: true,
+  //  useUnifiedTopology: true,
+});
+
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -14,6 +19,10 @@ app.use(
     graphiql: true,
   })
 );
+
+const dbConnection = mongoose.connection;
+dbConnection.on("error", (err) => console.log("Connection error:${err}"));
+dbConnection.once("open", () => console.log("Connected to Db!"));
 
 app.listen(PORT, (err) => {
   err ? console.log(err) : console.log("Server started");
