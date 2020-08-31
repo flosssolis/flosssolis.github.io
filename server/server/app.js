@@ -7,10 +7,13 @@ const app = express();
 
 const PORT = 3005;
 
-mongoose.connect("3158377e-d4b1-4e5c-a950-6530100e266e", {
-  useNewUrlParser: true,
-  //  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://newUs:123@movies-tut.wnnqw.mongodb.net/movies-tut?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 app.use(
   "/graphql",
@@ -21,7 +24,7 @@ app.use(
 );
 
 const dbConnection = mongoose.connection;
-dbConnection.on("error", (err) => console.log("Connection error:${err}"));
+dbConnection.on("error", (err) => console.log(`Connection error:${err}`));
 dbConnection.once("open", () => console.log("Connected to Db!"));
 
 app.listen(PORT, (err) => {

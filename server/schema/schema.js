@@ -102,8 +102,8 @@ const Mutation = new GraphQLObjectType({
     addDirector: {
       type: DirectorType,
       args: {
-        name: { type: GraphQLNonNull(GraphQLString) },
-        age: { type: GraphQLNonNull(GraphQLInt) },
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
       },
       resolve(parent, args) {
         const director = new Directors({
