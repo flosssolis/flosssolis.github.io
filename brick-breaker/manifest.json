@@ -1,0 +1,16 @@
+{
+  "short_name": "Brick Breaker",
+  "name": "Brick Breaker",
+  "icons": [
+    {
+      "src": "img/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "home.html",
+  "background_color": "#F1741A",
+  "theme_color": "#999999",
+  "orientation": "any",
+  "display": "standalone"
+}

@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Brick breaker</title>
+  <link rel="shortcut icon" href="img/breaker-favicon.ico">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Bree+Serif|Roboto:900');
+
+    html {
+      overflow: hidden;
+      user-select: none;
+    }
+
+    body {
+      background: rgb(50, 50, 50);
+      padding: 0;
+      margin: 0;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    canvas {
+      background: #fff;
+      display: flex;
+      margin: 0 auto;
+      image-rendering: crisp-edges;
+    }
+
+    .game {
+      width: 100%;
+    }
+
+    .game-over-notify,
+    .pause-notify,
+    .complete-notify,
+    .win-notify {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      display: none;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      border-radius: 20px;
+      border-right: 3px solid grey;
+      border-bottom: 3px solid grey;
+
+      background-color: rgba(255, 255, 255);
+
+    }
+
+    .game-over-notify h2,
+    .pause-notify h2,
+    .complete-notify h2,
+    .win-notify h2 {
+      position: relative;
+      color: #FF8181;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 24px;
+      white-space: nowrap;
+
+      margin: 20px 40px 10px 40px;
+    }
+
+    .pause-notify h2 {
+      color: #0181C1;
+      font-family: 'Bree Serif', serif;
+    }
+
+    .pause-notify .reload {
+      background-color: #FF8080;
+    }
+
+    .complete-notify {
+      background-color: #fff;
+    }
+
+    .complete-notify h2 {
+      color: #0181C1;
+      font-family: 'Bree Serif', serif;
+    }
+
+    .game-over-notify .reload {
+      margin-right: 0;
+    }
+
+    .button {
+      background-color: #FF8080;
+      width: 30px;
+      padding: 10px 50px;
+      border-radius: 12px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .reload {
+      background-color: #0080FF;
+      height: 30px;
+      width: 30px;
+      margin-right: 10px;
+    }
+
+    .button:hover {
+      opacity: .7;
+    }
+
+    .continue {
+      width: 40px;
+      background-color: #0080FF;
+    }
+
+    .bottomButtons {
+      display: flex;
+      flex-direction: row;
+      margin: 0 20px;
+    }
+
+    menu {
+      display: flex;
+      justify-content: space-between;
+
+      margin: 0 auto;
+      margin-left: 1px;
+      padding: 0;
+      background-color: #fff;
+      border-bottom: 1px solid grey;
+
+      width: 420px;
+      height: 100px;
+
+      color: #999999;
+      text-transform: uppercase;
+      font-family: 'Bree Serif', serif;
+      font-weight: 900;
+    }
+
+    .lifes {
+      margin-left: 15px;
+      margin-top: 47px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .lifes h6 {
+      margin: 0 auto;
+      font-size: 14px;
+    }
+
+    .lifes h5 {
+      margin: 0;
+      font-size: 28px;
+      color: #666666;
+      font-weight: bold;
+      position: relative;
+      bottom: 6px;
+    }
+
+    .lifesContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      position: relative;
+      top: 8px;
+    }
+
+    .progress {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .progress h5 {
+      position: relative;
+      top: 13px;
+      left: 5px;
+      margin: 0px auto;
+      font-size: 25px;
+      color: #999999;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .star {
+      position: relative;
+      right: 13px;
+      width: 30px;
+      padding: 5px;
+      background-color: #9A9A9A;
+      border-radius: 50%;
+      z-index: 30;
+    }
+
+    .meter {
+      position: relative;
+      bottom: 33px;
+      left: 20px;
+      width: 90px;
+      height: 10px;
+      background-color: #CCCCCC;
+      border: 3px solid #9A9A9A;
+      border-radius: 15px;
+    }
+
+    .meter .fuller {
+      position: relative;
+      left: 0px;
+      bottom: 12px;
+      display: block;
+      width: 0px;
+      height: 10px;
+      background-color: #FCD116;
+      z-index: 15;
+      border-radius: 15px;
+    }
+
+    .meter::after {
+      position: relative;
+      left: 60px;
+      bottom: 23px;
+      display: block;
+      margin: 0;
+      height: 12px;
+      width: 3px;
+      background-color: #9A9A9A;
+      content: ' ';
+      z-index: 20;
+    }
+
+    .meter::before {
+      position: relative;
+      left: 30px;
+      bottom: 1px;
+      display: block;
+      margin: 0;
+      height: 12px;
+      width: 3px;
+      background-color: #9A9A9A;
+      content: ' ';
+      z-index: 20;
+    }
+
+    .bricks {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      position: relative;
+      bottom: 15px;
+      left: 5px;
+    }
+
+    .bricks h6 {
+      margin: 0;
+      font-size: 16px;
+      padding-left: 5px;
+    }
+
+    .brick {
+      width: 20px;
+      height: 20px;
+      background-color: #000;
+      border-radius: 5px;
+      margin-top: 3px;
+    }
+
+    .settings {
+      margin-top: 47px;
+      margin-right: 15px;
+    }
+
+    .settings h6 {
+      margin: 0 auto;
+      position: relative;
+      bottom: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .pause {
+      width: 40px;
+      height: 40px;
+      margin-left: 15px;
+    }
+
+    .fade-in {
+      -webkit-animation: fade-in 400ms ease 100ms;
+      -moz-animation: fade-in 400ms ease 100ms;
+      animation: fade-in 400ms ease 100ms;
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .overlay {
+      display: flex;
+      background-color: #000;
+      width: 421px;
+      height: 750px;
+      z-index: 1000;
+      position: absolute;
+      top: 50%;
+      left: calc(50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .fade-in-overlay {
+      -webkit-animation: fade-in 1000ms ease;
+      -moz-animation: fade-in 1000ms ease;
+      animation: fade-in 1000ms ease;
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fade-in-overlay {
+      0% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .fade-out {
+      -webkit-animation: fade-out 1000ms ease-in-out;
+      -moz-animation: fade-out 1000ms ease-in-out;
+      animation: fade-out 1000ms ease-in-out;
+      -webkit-animation-fill-mode: both;
+      -moz-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. 
+    Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <div class="game">
+    <menu id="menu">
+      <div class="lifes">
+        <div class="lifesContainer">
+        </div>
+        <h6>Lifes left</h6>
+      </div>
+
+      <div class="progress">
+        <h5 class="score">0</h5>
+        <div class="ability">
+          <img src="img/Yellow_Star.png" alt="star" class="star">
+          <div class="meter"><span class="fuller"></span></div>
+        </div>
+        <div class="bricks">
+          <h6 class="bricksBreaken">0</h6>
+          <div class="brick"></div>
+        </div>
+      </div>
+
+      <div class="settings">
+        <img src="img/menu-alt-512.png" alt="menu" class="pause">
+        <h6>dynamic</h6>
+      </div>
+    </menu>
+    <canvas id="myCanvas"></canvas>
+    <div class="game-over-notify">
+      <h2>Game Over</h2>
+      <img src="img/recurring.png" alt="reload" class="button reload">
+      <a href="home.html"><img src="img/home.png" alt="home" class="button"></a>
+    </div>
+
+    <div class="pause-notify">
+      <h2>Game paused</h2>
+      <img src="img/continue.png" alt="continue" class="button continue">
+      <div class="bottomButtons">
+        <img src="img/recurring.png" alt="reload" class="button reload">
+        <a href="home.html"><img src="img/home.png" alt="home" class="button"></a>
+      </div>
+    </div>
+
+    <div class="win-notify">
+      <h2>Level</h2>
+      <h3>completed!</h3>
+      <img src="img/continue.png" alt="continue" class="button nextLevel">
+      <img src="img/recurring.png" alt="reload" class="button reload">
+      <a href="home.html"><img src="img/home.png" alt="home" class="button"></a>
+    </div>
+
+    <div class="complete-notify">
+      <h2>Level completed!</h2>
+    </div>
+  </div>
+  <div class="overlay"></div>
+  <script>
+    'use strict';
+
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext('2d');
+
+    const gameOverNotify = document.querySelector('.game-over-notify');
+    const newLevel = document.querySelector('.new-level');
+    const reloads = document.querySelectorAll('.reload');
+
+    const pauseButton = document.querySelector('.pause');
+    const pauseNotify = document.querySelector('.pause-notify');
+    const continueButton = document.querySelector('.continue');
+
+    const menu = document.getElementById('menu');
+    menu.height = 100;
+
+    const bricksBreaken = document.querySelector('.bricksBreaken');
+    const lifesContainer = document.querySelector('.lifesContainer');
+    const starsFuller = document.querySelector('.fuller');
+
+    const logo = document.querySelector('.logo');
+    const overlay = document.querySelector('.overlay');
+
+
+    // sizes of canvas
+    if (window.innerHeight > 750) {
+      canvas.height = 750 - menu.height;
+    } else {
+      canvas.height = window.innerHeight - menu.height;
+    };
+
+    screen.width > 420 ? canvas.width = 420 : canvas.width = screen.width;
+
+    if (screen.width < 420) {
+      canvas.width = screen.width;
+      canvas.style.marginRight = '0';
+      canvas.style.marginLeft = '0';
+    }
+    // overlay
+    overlay.style.height = (canvas.height + menu.height + 1) + 'px';
+
+    menu.style.width = canvas.width + 'px';
+
+    window.addEventListener("load", () => {
+      overlay.classList.add('fade-out');
+    });
+
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 1000);
+
+    let score = document.querySelector('.score');
+    let winScore = document.querySelector('.win-score');
+
+    // animation
+    let animationInterval = null;
+    let isAnimated = false;
+    let isMove = true;
+    let pixelsPlus = 0;
+
+    let isStarted = null;
+
+    // start values
+    let lifes = 3;
+    let minValue = 1;
+    // 1 - easy, 2 - middle, 3 - hard
+    let difficult = 1;
+
+    // score for 3 stars
+    let combo = 1;
+    let necessaryScore = 500 + (difficult * 100);
+    let percentValue = necessaryScore / 100;
+    let percentWidth = 0.9;
+
+
+    let standartBallRadius = 10;
+    let balls = [];
+
+    let brickColumnCount = 4;
+    let brickRowCount = 10;
+    let bricks = [];
+
+    let paddleX = null;
+    let paddleWidth = 75;
+
+    class Game {
+      constructor() {
+
+        this._Ball = new Ball();
+        this._Paddle = new Paddle();
+        this._Bricks = new Bricks();
+        this._Lifes = new Lifes();
+        this._BallDirection = new BallDirection();
+        this._Pause = new Pause();
+
+        this._Pause._addEvents();
+      }
+
+      _startGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // is started game or you choode the direct
+        if (isStarted == false) {
+
+          this._BallDirection._addEvents();
+          this._BallDirection._drawDirection();
+
+          this._Bricks._drawBricks();
+          this._Bricks._bricksCollision();
+
+          for (let i = 0; i < balls.length; i++) {
+            this._Ball._drawBall(balls[i]);
+          }
+
+          this._Paddle._drawPaddle();
+          this._Paddle._removeEvents();
+          this._additionalFuncs();
+
+        } else {
+
+          this._Paddle._drawPaddle();
+          this._Paddle._addEvents();
+          this._Paddle._paddleCollision();
+
+          this._Bricks._drawBricks();
+          this._Bricks._bricksCollision();
+
+          for (let i = 0; i < balls.length; i++) {
+            this._Ball._drawBall(balls[i]);
+          }
+
+          for (let i = 0; i < balls.length; i++) {
+            balls[i].x += balls[i].dx;
+            balls[i].y += balls[i].dy;
+          }
+
+          this._BallDirection._removeEvents();
+          this._additionalFuncs();
+
+          if (isStarted == null) isStarted = false;
+        }
+      }
+
+      _restart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        isStarted = null;
+        isAnimated = false;
+        isMove = true;
+        clearInterval(animationInterval);
+
+        lifes = 3;
+        lifesContainer.innerHTML = '';
+        for (let i = 0; i < lifes; i++) {
+          let heart = new Image(23, 23);
+          heart.src = 'img/Heart-icon.png';
+          heart.classList.add('.heart');
+
+          lifesContainer.appendChild(heart);
+        }
+
+        minValue = 1;
+        pixelsPlus = 0;
+
+        // score
+        combo = 1;
+        score.innerHTML = 0;
+        starsFuller.style.width = '0px';
+
+        balls = [];
+
+        let ball = {
+          x: canvas.width / 2,
+          y: (canvas.height * 0.9) - 12,
+          dx: 2,
+          dy: -2,
+          ballRadius: 10,
+          status: 1
+        }
+        balls.push(ball);
+
+        brickColumnCount = 4;
+        brickRowCount = 9;
+        bricks = [];
+        bricksBreaken.innerHTML = 0;
+        this._Bricks._fillBricks();
+
+        paddleX = balls[0].x - (75 / 2);
+
+        gameOverNotify.style.display = 'none';
+        gameOverNotify.classList.remove('fade-in');
+
+        pauseNotify.style.display = 'none';
+        pauseNotify.classList.remove('fade-in');
+
+        interval = setInterval(this._startGame.bind(game), 10);
+      }
+
+      _additionalFuncs() {
+        for (let c = 0; c < brickColumnCount; c++) {
+          for (let r = 0; r < brickRowCount; r++) {
+            if (bricks[c][r].animation) {
+              bricks[c][r].animation._moveSquares();
+              if (bricks[c][r].animation._counter > 2000) {
+                delete bricks[c][r].animation
+              }
+            };
+
+            if (bricks[c][r].y >= 532 && bricks[c][r].status == 1) {
+              lifes = 0;
+              this._Lifes._updateDOMLifes();
+              this._Lifes._endGame();
+            }
+          }
+        }
+
+        // all balls
+        for (let i = 0; i < balls.length; i++) {
+
+          let ball = balls[i];
+          // sides of field collision
+          if (ball.x + ball.dx > canvas.width - ball.ballRadius || ball.x + ball.dx < ball.ballRadius) {
+            ball.dx = -ball.dx;
+          }
+
+          if (ball.y + ball.dy < ball.ballRadius) {
+            ball.dy = -ball.dy;
+          }
+
+          ball.x = +ball.x.toFixed(1);
+          ball.y = +ball.y.toFixed(1);
+        }
+
+        // delete balls
+        balls.forEach(ball => {
+          if (ball.y >= canvas.height || ball.y < ball.ballRadius) ball.status = 0;
+        });
+
+        for (let i = 0; i < balls.length; i++) {
+          if (balls[i].status == 0) balls.splice(i, 1);
+        }
+
+        // if all balls are die
+        if (balls.length == 0) {
+
+          let x = canvas.width / 2;
+          let y = (canvas.height * 0.9) - 12;
+          let dx = 2;
+          let dy = -2;
+
+          this._Lifes._updateLifes();
+          this._Ball._createBall(x, y, dx, dy, standartBallRadius);
+
+        }
+
+        // update difficult
+        if (brickColumnCount >= 10) difficult = 2;
+        if (brickColumnCount >= 20) difficult = 3;
+      }
+    }
+
+    class Ball {
+      constructor() {
+        let x = canvas.width / 2;
+        let y = (canvas.height * 0.9) - 12;
+        let dx = 2;
+        let dy = -2;
+
+        this._createBall(x, y, dx, dy, standartBallRadius);
+        this._drawBall(balls[0]);
+      }
+
+      _createBall(x, y, dx, dy, ballRadius) {
+        let ball = {
+          x: x,
+          y: y,
+          dx: dx,
+          dy: dy,
+          ballRadius: ballRadius,
+          status: 1
+        };
+
+        balls.push(ball);
+      }
+
+      _drawBall(ball) {
+        if (ball.status == 0) return;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#999";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+
+    class BallDirection {
+
+      constructor() {
+
+        this._miniX = balls[0].x;
+        this._miniY = balls[0].y;
+        this._miniDx = null;
+        this._miniDy = null;
+
+        this._miniBallRadius = 1;
+        this._miniOffset = 1.25;
+
+        this._mousedown = false;
+        this._sumCoords = null;
+
+        this._startPosition = {};
+        this._intermediatePosition = {};
+        this._necessaryPosition = {};
+        this._endPosition = {};
+
+        this._that = this;
+
+        // -------------------- mouse events -------------------
+
+        this._mouseDown = function (e) {
+          this._mousedown = true;
+
+          this._startPosition = {
+            x: e.pageX,
+            y: e.pageY
+          };
+        }
+
+        // save the mouse down so it can be used in multiple places
+        this._mouseDownHandler = this._mouseDown.bind(this);
+
+        this._mouseMove = function (e) {
+          if (!this._mousedown) return;
+
+          this._intermediatePosition = {
+            x: e.pageX,
+            y: e.pageY
+          };
+
+          this._drawDirection();
+        }
+
+        // save the mouse move so it can be used in multiple places
+        this._mouseMoveHandler = this._mouseMove.bind(this);
+
+        this._mouseUp = function (e) {
+          this._mousedown = false;
+
+          this._endPosition = {
+            x: e.pageX,
+            y: e.pageY
+          };
+
+          if (this._sumBallsToPosition > 5) this._startBallMove();
+        }
+
+        // save the mouse up so it can be used in multiple places
+        this._mouseUpHandler = this._mouseUp.bind(this);
+
+        // ------------- touches ------------------
+
+        this._touchStart = function (e) {
+          this._mousedown = true;
+
+          this._startPosition = {
+            x: e.changedTouches[0].pageX,
+            y: e.changedTouches[0].pageY
+          };
+        }
+
+        // save the touch start so it can be used in multiple places
+        this._touchStartHandler = this._touchStart.bind(this);
+
+        this._touchMove = function (e) {
+          if (!this._mousedown) return;
+
+          this._intermediatePosition = {
+            x: e.changedTouches[0].pageX,
+            y: e.changedTouches[0].pageY
+          };
+        }
+
+        // save the touch move so it can be used in multiple places
+        this._touchMoveHandler = this._touchMove.bind(this);
+
+        this._touchEnd = function (e) {
+          this._mousedown = false;
+
+          this._endPosition = {
+            x: e.changedTouches[0].pageX,
+            y: e.changedTouches[0].pageY
+          };
+
+          if (this._sumBallsToPosition > 5) this._startBallMove();
+        }
+
+        // save the touch end so it can be used in multiple places
+        this._touchEndHandler = this._touchEnd.bind(this);
+
+        this._addEvents();
+      }
+
+      _drawDirection() {
+
+        let necessaryLength = {
+          x: this._startPosition.x - this._intermediatePosition.x,
+          y: this._startPosition.y - this._intermediatePosition.y
+        }
+
+        this._necessaryPosition = {
+          x: balls[0].x + necessaryLength.x,
+          y: balls[0].y + necessaryLength.y
+        }
+
+        this._sumCoords = +Math.sqrt((necessaryLength.x ** 2) + (necessaryLength.y ** 2)).toFixed(2);
+        this._sumBallsToPosition = Math.floor(this._sumCoords / (this._miniBallRadius + (this._miniOffset * 2)));
+
+        this._miniDx = +(necessaryLength.x / this._sumBallsToPosition).toFixed(3);
+        this._miniDy = +(necessaryLength.y / this._sumBallsToPosition).toFixed(3);
+
+        if (isNaN(this._miniDx)) return;
+        if (!isFinite(this._miniDx)) return;
+        if (this._necessaryPosition.y > canvas.height * 0.8) return;
+
+        // draw mini ball until sides collision
+        while (this._miniX < canvas.width && this._miniX > 0 && this._miniY > 0 && this._miniY < canvas.height) {
+
+          ctx.beginPath();
+          ctx.arc(this._miniX, this._miniY, this._miniBallRadius, 0, Math.PI * 2);
+          ctx.fillStyle = "#999";
+          ctx.fill();
+          ctx.closePath();
+
+          this._miniX += this._miniDx;
+          this._miniY += this._miniDy;
+
+        }
+
+        // reset values
+        this._miniX = balls[0].x;
+        this._miniY = balls[0].y;
+      }
+
+      _startBallMove() {
+
+        if (this._necessaryPosition.y > canvas.height * 0.85) return;
+
+        isStarted = true;
+
+        balls[0].dx = this._miniDx;
+        balls[0].dy = this._miniDy;
+
+        this._setZeroValues();
+      }
+
+      _addEvents() {
+
+        canvas.addEventListener('mousedown', this._mouseDownHandler);
+        canvas.addEventListener('mousemove', this._mouseMoveHandler);
+        canvas.addEventListener('mouseup', this._mouseUpHandler);
+
+        canvas.addEventListener('touchstart', this._touchStartHandler);
+        canvas.addEventListener('touchmove', this._touchMoveHandler);
+        canvas.addEventListener('touchend', this._touchEndHandler);
+
+      }
+
+      _removeEvents() {
+        canvas.removeEventListener('mousedown', this._mouseDownHandler);
+        canvas.removeEventListener('mousemove', this._mouseMoveHandler);
+        canvas.removeEventListener('mouseup', this._mouseUpHandler);
+
+        canvas.removeEventListener('touchstart', this._touchStartHandler);
+        canvas.removeEventListener('touchmove', this._touchMoveHandler);
+        canvas.removeEventListener('touchend', this._touchEndHandler);
+      }
+
+      _setZeroValues() {
+        this._miniX = balls[0].x;
+        this._miniY = balls[0].y;
+        this._miniDx = null;
+        this._miniDy = null;
+
+        this._miniBallRadius = 1;
+        this._miniOffset = 1.25;
+
+        this._mousedown = false;
+        this._sumCoords = null;
+
+        this._startPosition = {};
+        this._intermediatePosition = {};
+        this._necessaryPosition = {};
+        this._endPosition = {};
+      }
+    }
+
+    class Paddle {
+      constructor() {
+
+        this._paddleHeight = 10;
+        this._leftOffset = (screen.width - canvas.width) / 2;
+
+        paddleX = (canvas.width - paddleWidth) / 2;
+        this._paddleY = canvas.height * 0.9;
+
+        this._Bricks = new Bricks();
+
+        // ------------ mouse --------------
+
+        this._paddleMove = function (e) {
+          let center = Math.floor(e.clientX - (paddleWidth * 0.5) - this._leftOffset);
+
+          if (center < canvas.width - paddleWidth && center > 0) paddleX = center;
+        }
+
+        // save the paddle move so it can be used in multiple places
+        this._paddleMoveHandler = this._paddleMove.bind(this);
+
+        // -------- touch ------------
+
+        this._paddleTouchMove = function (e) {
+          let center = Math.floor(e.changedTouches[0].pageX - (paddleWidth * 0.5) - this._leftOffset);
+
+          if (center < canvas.width - paddleWidth && center > 0) paddleX = center;
+          e.preventDefault();
+        }
+
+        // save the paddle move so it can be used in multiple places
+        this._paddleTouchMoveHandler = this._paddleTouchMove.bind(this);
+
+        this._drawPaddle();
+        this._paddleCollision();
+      }
+
+      _drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, this._paddleY, paddleWidth, this._paddleHeight);
+        ctx.fillStyle = "#999";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      _paddleCollision() {
+
+        for (let i = 0; i < balls.length; i++) {
+
+          let ball = balls[i];
+          // under paddle
+          if (ball.y > this._paddleY - ball.ballRadius + 3) {
+            ball.dy = 2;
+            ball.ballRadius *= 0.95;
+
+            ball.y += ball.dy;
+            ball.x += ball.dx;
+            return;
+          }
+
+          // left corner of paddle
+          if (ball.x >= paddleX - ball.ballRadius && ball.x <= paddleX &&
+            ball.y == this._paddleY - ball.ballRadius && ball.dx > 0 ||
+            // right top corner of paddle 
+            ball.x == paddleX + paddleWidth + ball.ballRadius &&
+            ball.y >= this._paddleY && ball.dx < 0) {
+
+            this._Bricks._newColon();
+
+            ball.dy = -ball.dy;
+            ball.dx = -ball.dx;
+
+            return;
+          }
+
+          // change speed depending on where the ball hit
+
+          if (ball.y >= this._paddleY - ball.ballRadius &&
+            ball.y <= this._paddleY &&
+            ball.x >= paddleX - ball.ballRadius &&
+            ball.x <= paddleX + paddleWidth + ball.ballRadius) {
+
+            let centerPaddle = Math.floor((paddleWidth / 2) + paddleX);
+            // reset dx
+            ball.dx < 0 ? ball.dx = -2 : ball.dx = 2;
+            ball.dy < 0 ? ball.dy = -2 : ball.dy = 2;
+
+            if (ball.x < centerPaddle && ball.dx < 0) {
+              ball.dx = +(ball.dx * ((centerPaddle - ball.x) / 20)).toFixed(1);
+            };
+
+            if (ball.x > centerPaddle && ball.dx > 0) {
+              ball.dx = +((ball.dx * ((ball.x - centerPaddle) / 20))).toFixed(1);
+            };
+
+            this._Bricks._newColon();
+
+            // min-max speed
+            if (ball.dx >= 0 && ball.dx < 2) ball.dx = 2;
+            ball.dx > 3 ? ball.dx = 3 : ball.dx = ball.dx;
+
+            if (ball.dx <= 0 && ball.dx > -2) ball.dx = -2;
+            ball.dx < -3 ? ball.dx = -3 : ball.dx = ball.dx;
+
+            ball.dy = -ball.dy;
+            ball.y += ball.dy;
+            combo = 1;
+
+            return;
+          }
+        }
+      }
+
+      _addEvents() {
+        // mouse support
+        canvas.addEventListener('mousemove', this._paddleMoveHandler);
+
+        // mobile support
+        canvas.addEventListener('touchmove', this._paddleTouchMoveHandler);
+      }
+
+      _removeEvents() {
+        // mouse support
+        canvas.removeEventListener('mousemove', this._paddleMoveHandler);
+
+        // mobile support
+        canvas.removeEventListener('touchmove', this._paddleTouchMoveHandler);
+      }
+    }
+
+    class Bricks {
+      constructor() {
+
+        this._brickPadding = 10;
+        this._brickWidth = Math.floor(canvas.width / 14);
+        this._brickHeight = this._brickWidth;
+        this._brickOffsetLeft = (canvas.width - (this._brickWidth * brickRowCount) - (this._brickPadding * (
+          brickRowCount - 1))) / 2;
+        this._brickOffsetTop = 15;
+
+        this._colors = ['#64C9C5', '#5E423E', '#F1741A', '#2A91BC', '#FF9A2E', '#21E86C', '#EA6499'];
+        this._Lifes = new Lifes();
+
+        this._fillBricks();
+        this._drawBricks();
+        this._bricksCollision();
+
+      }
+
+      _fillBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+          bricks[c] = [];
+
+          for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = {
+              x: 0,
+              y: 0,
+              status: getXPercent(70, 1, 0),
+              strength: getStrength(),
+              color: this._colors[getRandom(0, 6)],
+              ability: getAbility()
+            };
+
+            if (bricks[c][r].ability == 'bomb') {
+              bricks[c][r].col = c;
+              bricks[c][r].row = r;
+            }
+          }
+        }
+      }
+
+      _drawBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+          for (let r = 0; r < brickRowCount; r++) {
+
+            // current brick
+            let b = bricks[c][r];
+
+            if (b.status == 1) {
+
+              let brickX = (r * (this._brickWidth + this._brickPadding)) + this._brickOffsetLeft;
+              let brickY = (c * (this._brickHeight + this._brickPadding)) + this._brickOffsetTop;
+
+              if (!isAnimated) {
+                b.x = brickX;
+                b.y = brickY;
+              }
+
+              ctx.beginPath();
+              roundedRect(ctx, b.x, b.y, this._brickWidth, this._brickHeight, b.color, 5);
+
+              switch (b.strength) {
+                case 1:
+                  {
+                    ctx.fillStyle = b.color;
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                  }
+
+                case 2:
+                  {
+                    ctx.fillStyle = LightenDarkenColor(b.color, 40);
+                    ctx.fill();
+                    ctx.closePath();
+                    ctx.beginPath();
+
+                    ctx.moveTo(b.x, b.y + 5);
+                    ctx.lineTo(b.x + this._brickWidth - 5, b.y + this._brickHeight);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = LightenDarkenColor(b.color, 70);
+                    ctx.stroke();
+
+                    ctx.moveTo(b.x + 10, b.y);
+                    ctx.lineTo(b.x + this._brickWidth, b.y + this._brickHeight - 10);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = LightenDarkenColor(b.color, 70);
+                    ctx.stroke();
+                    ctx.closePath();
+                  }
+              }
+
+              switch (b.ability) {
+                case 'none':
+                  {
+                    break;
+                  }
+
+                case 'bomb':
+                  {
+                    let img = new Image(20, 20);
+                    img.src = 'img/bomb.png';
+
+                    b.color = '#F95264';
+                    ctx.drawImage(img, b.x + 5, b.y + 2.5, 25, 25);
+
+                    break;
+                  }
+
+                case 'newBall':
+                  {
+                    b.color = '#F95264';
+
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(b.x + this._brickWidth / 2, b.y + this._brickHeight / 2, standartBallRadius * 0.7, 0,
+                      Math.PI * 2);
+                    ctx.fill();
+
+                    break;
+                  }
+
+                case 'life':
+                  {
+                    let img = new Image(20, 20);
+                    img.src = 'img/white-heart.png';
+
+                    b.color = '#F95264';
+                    ctx.drawImage(img, b.x + 5, b.y + 5, 20, 20);
+
+                    break;
+                  }
+
+                case 'black-hole':
+                  {
+                    let img = new Image(20, 20);
+                    img.src = 'img/black-hole.png';
+
+                    b.color = '#F95264';
+                    ctx.drawImage(img, b.x + 5, b.y + 5, 20, 20);
+
+                    break;
+                  }
+
+                case 'paddle-expand':
+                  {
+                    b.color = '#F95264';
+
+                    ctx.beginPath();
+                    ctx.rect(b.x + 5, b.y + (this._brickHeight / 2) - 2.5, this._brickWidth - 10, 5);
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
+
+                    break;
+                  }
+
+                case 'atomic-bomb':
+                  {
+                    let img = new Image(20, 20);
+                    img.src = 'img/atomic.png';
+
+                    b.color = '#F95264';
+                    ctx.drawImage(img, b.x + 5, b.y + 5, 20, 20);
+
+                    break;
+                  }
+              }
+
+              ctx.closePath();
+            }
+          }
+        }
+      }
+
+      _bricksCollision() {
+
+        for (let c = 0; c < brickColumnCount; c++) {
+          for (let r = 0; r < brickRowCount; r++) {
+            // current brick
+            let b = bricks[c][r];
+
+            if (b.status === 1) {
+
+              // check all balls
+              for (let i = 0; i < balls.length; i++) {
+
+                // current ball
+                let ball = balls[i];
+
+                // rebound from corners
+                // left top corner
+                if (ball.x == b.x - ball.ballRadius && ball.y == b.y - ball.ballRadius && ball.dx > 0 && ball.dy > 0 ||
+                  // right top corner
+                  ball.x >= b.x + this._brickWidth && ball.x <= b.x + this._brickWidth + ball.ballRadius &&
+                  ball.y <= b.y && ball.y >= b.y - ball.ballRadius && ball.dx < 0 && ball.dy > 0 ||
+                  // left bottom corner
+                  ball.x <= b.x && ball.x >= b.x - ball.ballRadius && ball.dx > 0 && ball.dy < 0 &&
+                  ball.y >= b.y + this._brickHeight && ball.y <= b.y + this._brickHeight + ball.ballRadius ||
+                  // right bottom corner
+                  ball.x >= b.x + this._brickWidth && ball.x <= b.x + this._brickWidth + ball.ballRadius && ball.dy <
+                  0 &&
+                  ball.y >= b.y + this._brickHeight && ball.y <= b.y + this._brickHeight + ball.ballRadius && ball.dx <
+                  0) {
+
+                  // change speed a bit
+                  if (ball.dy < 3 && ball.dy > -3) {
+                    ball.dy = -ball.dy + 0.2;
+                  } else {
+                    ball.dy = -ball.dy;
+                  }
+                  if (ball.dx < 3 && ball.dx > -3) {
+                    ball.dx = -ball.dx + 0.2;
+                  } else {
+                    ball.dx = -ball.dx;
+                  }
+
+                  ball.y += ball.dy;
+                  ball.x += ball.dx;
+
+                  this._collisionDOMUpdate(b, ball);
+                  return;
+                }
+
+                // rebound from sides (top and bottom)
+                // top
+                if (ball.x > b.x - ball.ballRadius && ball.x < b.x + this._brickWidth + ball.ballRadius &&
+                  ball.y > b.y - ball.ballRadius && ball.y < b.y && ball.dy > 0 ||
+                  // bottom
+                  ball.x > b.x - ball.ballRadius && ball.x < b.x + this._brickWidth + ball.ballRadius && ball.dy < 0 &&
+                  ball.y > b.y + this._brickHeight && ball.y < b.y + this._brickHeight + ball.ballRadius) {
+
+                  if (ball.dy < 3 && ball.dy > -3) {
+                    ball.dy = -ball.dy + 0.1;
+                  } else {
+                    ball.dy = -ball.dy;
+                  }
+
+                  ball.y += ball.dy * 2;
+
+                  this._collisionDOMUpdate(b, ball);
+                  return;
+                }
+
+                // rebound from sides (left and right)
+                // left side
+                if (ball.y > b.y - ball.ballRadius && ball.y < b.y + this._brickHeight + ball.ballRadius &&
+                  ball.x <= b.x && ball.x >= b.x - ball.ballRadius ||
+                  // right side
+                  ball.y > b.y - ball.ballRadius && ball.y < b.y + this._brickHeight + ball.ballRadius &&
+                  ball.x >= b.x + this._brickWidth && ball.x <= b.x + this._brickWidth + ball.ballRadius) {
+
+                  if (ball.dx < 3 && ball.dx > -3) {
+                    ball.dx = -ball.dx + 0.1;
+                  } else {
+                    ball.dx = -ball.dx;
+                  }
+
+                  ball.x += ball.dx * 2;
+
+                  this._collisionDOMUpdate(b, ball);
+                  return;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // do after every collision
+      _collisionDOMUpdate(brick, breakBall) {
+
+        // break brick if strength == 1
+        this._checkStrength(brick);
+
+        switch (brick.ability) {
+          case 'none':
+            {
+              break;
+            }
+
+          case 'bomb':
+            {
+
+              if (brick.strength > 1) break;
+              // get surroundingBricks
+              let surroundingBricks = [];
+              // fill arr surrounding bricks
+
+              if (brick.col > 1 && typeof bricks[brick.col - 1][brick.row] == "object")
+                surroundingBricks.push(bricks[brick.col - 1][brick.row]);
+
+              if (brick.row > 1 && typeof bricks[brick.col][brick.row - 1] == "object")
+                surroundingBricks.push(bricks[brick.col][brick.row - 1]);
+
+              if (brick.row < brickRowCount - 1 && typeof bricks[brick.col][brick.row + 1] == "object")
+                surroundingBricks.push(bricks[brick.col][brick.row + 1]);
+
+              if (brick.col < brickColumnCount - 1 && typeof bricks[brick.col + 1][brick.row] == "object")
+                surroundingBricks.push(bricks[brick.col + 1][brick.row]);
+
+              surroundingBricks.forEach(surBrick => {
+                if (surBrick.status == 1) this._collisionDOMUpdate(surBrick, breakBall);
+              });
+
+              break;
+            }
+
+          case 'newBall':
+            {
+              if (brick.strength > 1) break;
+              let ball = {
+                x: brick.x + this._brickWidth,
+                y: brick.y + this._brickHeight,
+                dx: breakBall.dx + getRandom(-1, 1),
+                dy: -breakBall.dy,
+                ballRadius: 10,
+                status: 1
+              }
+
+              balls.push(ball);
+              break;
+            }
+
+          case 'life':
+            {
+              if (brick.strength > 1) break;
+
+              lifes < 3 ? lifes++ : lifes = lifes;
+              this._Lifes._updateDOMLifes();
+
+              break;
+            }
+
+          case 'black-hole':
+            {
+              if (brick.strength > 1) break;
+
+              let availableBricks = [];
+
+              for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                  if (bricks[c][r].status == 1) availableBricks.push(bricks[c][r]);
+                }
+              }
+
+              let randomBrick = availableBricks[getRandom(0, availableBricks.length - 1)];
+              randomBrick.status = 0;
+              let size = 15;
+
+              ctx.clearRect(randomBrick.x, randomBrick.y, this._brickWidth, this._brickHeight);
+
+              let holeInterval = setInterval(() => {
+                size = size - (size / 100);
+                ctx.beginPath();
+                ctx.arc(randomBrick.x + this._brickWidth / 2, randomBrick.y + this._brickHeight / 2, size, 0,
+                  Math.PI * 2);
+                ctx.fillStyle = "#000";
+                ctx.fill();
+                ctx.closePath();
+              }, 10);
+
+              setTimeout(() => clearInterval(holeInterval), 1500);
+
+              breakBall.x = randomBrick.x;
+              breakBall.y = randomBrick.y;
+
+              break;
+            }
+
+          case 'paddle-expand':
+            {
+              if (brick.strength > 1) break;
+
+              paddleWidth = paddleWidth * 1.25;
+              setTimeout(() => paddleWidth = paddleWidth * 0.8, 6000 * difficult);
+              break;
+            }
+
+          case 'atomic-bomb':
+            {
+              if (brick.strength > 1) break;
+
+              overlay.style.display = 'flex';
+              overlay.classList.toggle('fade-in-overlay');
+
+              setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.toggle('fade-in-overlay')
+              }, 1000);
+
+              lifes--;
+              this._Lifes._updateDOMLifes();
+
+              balls = [];
+              let newBall = new Ball();
+              isStarted = null;
+
+              for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                  let brick = bricks[c][r];
+                  brick.status == 1 ? this._checkStrength(brick) : null;
+                }
+              }
+
+              break;
+            }
+        }
+      }
+
+      _newColon() {
+        if (pixelsPlus > 0) return;
+        isAnimated = true;
+        brickColumnCount++;
+
+        bricks[brickColumnCount - 1] = [];
+
+        for (let r = 0; r < brickRowCount; r++) {
+          bricks[brickColumnCount - 1][r] = {
+            x: 0,
+            y: 0,
+            col: null,
+            row: null,
+            status: 0,
+            strength: 0,
+            color: 0,
+            ability: 'none'
+          };
+        }
+
+        // new line of bricks
+        for (let c = brickColumnCount - 1; c > 0; c--) {
+          for (let r = 0; r < brickRowCount; r++) {
+            let brick = bricks[c][r];
+            let pastBrick = bricks[c - 1][r];
+
+            brick.color = pastBrick.color;
+            brick.ability = pastBrick.ability;
+            brick.status = pastBrick.status;
+            brick.strength = pastBrick.strength;
+            brick.x = pastBrick.x;
+            brick.y = pastBrick.y;
+
+            if (pastBrick.ability == 'bomb') {
+              brick.col = +pastBrick.col + 1;
+              brick.row = pastBrick.row;
+            }
+          }
+        }
+
+        // fulling new line rows
+        for (let r = 0; r < brickRowCount; r++) {
+          bricks[0][r].color = this._colors[getRandom(0, 6)];
+          bricks[0][r].ability = getAbility();
+          bricks[0][r].status = getXPercent(70, 1, 0);
+          bricks[0][r].strength = getStrength();
+          bricks[0][r].x = (r * (this._brickWidth + this._brickPadding)) + this._brickOffsetLeft;
+          bricks[0][r].y = -(this._brickOffsetTop + +this._brickHeight) + 20;
+
+          if (bricks[0][r].ability == 'bomb') {
+            bricks[0][r].col = 0;
+            bricks[0][r].row = r;
+          }
+        }
+
+        animationInterval = setInterval(() => {
+          for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+              bricks[c][r].y++;
+            }
+          }
+          pixelsPlus++;
+          this._cancelAnimation();
+          this._drawBricks();
+        }, 25);
+
+        this._drawBricks();
+      }
+
+      _cancelAnimation() {
+        if (pixelsPlus >= 40) {
+          clearInterval(animationInterval);
+          isAnimated = false;
+          pixelsPlus = 0;
+        }
+      }
+
+      _checkStrength(brick) {
+        // update values on screen
+        combo += .1;
+        score.innerHTML = +score.innerHTML + (10 * combo);
+
+        if (brick.strength == 1) bricksBreaken.innerHTML = +bricksBreaken.innerHTML + 1;
+        brick.animation = new Animation(brick);
+
+        brick.strength--;
+        if (brick.strength <= 0) {
+          brick.status = 0;
+          brick.strength = 0;
+        }
+
+        if (+parseInt(starsFuller.style.width) >= 90) {
+          starsFuller.style.width = '90px';
+          return;
+        }
+
+        starsFuller.style.width = ((score.innerHTML / percentValue) * percentWidth) + 'px';
+      }
+    }
+
+    class Lifes {
+      _updateLifes() {
+        lifes--;
+        this._updateDOMLifes();
+
+        if (lifes < 1) {
+          this._endGame();
+          return;
+        } else {
+
+          isStarted = null;
+
+          paddleX = (canvas.width / 2) - (75 / 2);
+          isMove = false;
+
+          setTimeout(() => {
+            isMove = true;
+          }, 2000)
+        }
+      }
+
+      _updateDOMLifes() {
+        lifesContainer.innerHTML = '';
+
+        for (let i = 0; i < lifes; i++) {
+          let heart = new Image(23, 23);
+          heart.src = 'img/Heart-icon.png';
+          heart.classList.add('.heart');
+
+          lifesContainer.appendChild(heart);
+        }
+      }
+
+      _endGame() {
+        gameOverNotify.style.display = 'flex';
+        gameOverNotify.classList.add('fade-in');
+
+        clearInterval(interval);
+        clearInterval(animationInterval);
+      }
+    }
+
+    class Pause {
+
+      _pauseGame() {
+        //just wait 1s to end animation, if it move blocks now
+        if (pixelsPlus > 1) setTimeout(() => {
+          pauseNotify.style.display = 'flex';
+          pauseNotify.classList.toggle('fade-in');
+
+          clearInterval(interval);
+          return;
+        }, 1000);
+        else {
+          pauseNotify.style.display = 'flex';
+          pauseNotify.classList.toggle('fade-in');
+
+          clearInterval(interval);
+        }
+      }
+
+      _continueGame() {
+        pauseNotify.style.display = 'none';
+        pauseNotify.classList.toggle('fade-in');
+
+        interval = setInterval(game._startGame.bind(game), 10);
+      }
+
+      _addEvents() {
+        pauseButton.addEventListener('click', this._pauseGame);
+        continueButton.addEventListener('click', this._continueGame);
+      }
+
+    }
+
+    class Animation {
+      constructor(brick) {
+        this._brick = brick;
+        this._counter = 0;
+        this._x = brick.x;
+        this._y = brick.y;
+        this._color = brick.color;
+        this._size = 10;
+        this._strength = brick.strength;
+        this._square = [];
+
+        this._createSquares();
+      }
+
+      _createSquares() {
+        for (let i = 0; i < 4; i++) {
+
+          this._square[i] = {};
+
+          this._square[i].x = this._x;
+          this._square[i].y = this._y;
+
+          this._square[i].dx = (Math.random() * 4 - 2);
+          this._square[i].dy = -(Math.random() * 3);
+          this._square[i].a = getRandom(0, 360);
+
+          ctx.beginPath();
+          roundedRect(ctx, this._square[i].x, this._square[i].y, this._size, this._size, this._color, 2);
+          ctx.fillStyle = this._square[i].color;
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+
+      _moveSquares() {
+        for (let i = 0; i < 4; i++) {
+
+          this._counter++;
+          this._square[i].dy += 0.05;
+          this._square[i].a += 0.07;
+          this._square[i].x += this._square[i].dx;
+          this._square[i].y += this._square[i].dy;
+
+          let xCenter = this._square[i].x + this._size / 2;
+          let yCenter = this._square[i].y + this._size / 2;
+
+          ctx.beginPath();
+          ctx.save();
+          ctx.translate(xCenter, yCenter);
+          ctx.rotate(this._square[i].a);
+          ctx.translate(-xCenter, -yCenter);
+          roundedRect(ctx, this._square[i].x, this._square[i].y, this._size, this._size, this._color, 2);
+
+          let b = this._square[i];
+
+          switch (this._strength) {
+            case 1:
+              {
+                ctx.fillStyle = this._color;
+                ctx.fill();
+                break;
+              }
+
+            case 2:
+              {
+                ctx.fillStyle = '#ECECEC';
+                ctx.fill();
+                ctx.strokeStyle = '#ECECEC';
+                ctx.stroke();
+
+                ctx.strokeStyle = '#F6F6F6';
+                ctx.moveTo(b.x, b.y);
+                ctx.lineTo(b.x + this._size, b.y + this._size);
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                break;
+              }
+          }
+
+          ctx.closePath();
+          ctx.restore();
+        }
+      }
+    }
+
+    // support functions
+
+    function getRandom(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getXPercent(x, xPercent, restPercent) {
+      return Math.random() >= (x / 100) ? restPercent : xPercent;
+    }
+
+    // paint border-radius on canvas elements
+    function roundedRect(ctx, x, y, width, height, color, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x, y + radius);
+      ctx.lineTo(x, y + height - radius);
+      ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+      ctx.lineTo(x + width - radius, y + height);
+      ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+      ctx.lineTo(x + width, y + radius);
+      ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+      ctx.lineTo(x + radius, y);
+      ctx.quadraticCurveTo(x, y, x, y + radius);
+      ctx.strokeStyle = color;
+      ctx.stroke();
+    }
+
+    let game = new Game();
+    let interval = setInterval(game._startGame.bind(game), 10);
+    for (let i = 0; i < reloads.length; i++) {
+      reloads[i].addEventListener('click', game._restart.bind(game));
+    }
+
+    //update "lifes left" values in menu
+    for (let i = 0; i < lifes; i++) {
+      let heart = new Image(23, 23);
+      heart.src = 'img/Heart-icon.png';
+      heart.classList.add('.heart');
+
+      lifesContainer.appendChild(heart);
+    }
+
+    // lighten the color
+    function LightenDarkenColor(col, amt) {
+
+      var usePound = false;
+
+      if (col[0] == "#") {
+        col = col.slice(1);
+        usePound = true;
+      }
+
+      var num = parseInt(col, 16);
+
+      var r = (num >> 16) + amt;
+
+      if (r > 255) r = 255;
+      else if (r < 0) r = 0;
+
+      var b = ((num >> 8) & 0x00FF) + amt;
+
+      if (b > 255) b = 255;
+      else if (b < 0) b = 0;
+
+      var g = (num & 0x0000FF) + amt;
+
+      if (g > 255) g = 255;
+      else if (g < 0) g = 0;
+
+      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+
+    }
+
+    function getStrength() {
+      let strength = null;
+
+      if (brickColumnCount >= 10 && getXPercent(20 * difficult, 1, 0)) {
+        // last 10 levels, getxpercent - 10% * difficult to get strength 3
+        if (brickColumnCount >= 20 && getXPercent(10 * difficult, 1, 0)) strength = 3;
+        // from 10 to 20 levels - max 2 strength, 20-60 %
+        else strength = 2;
+        // first 10 levels
+      } else strength = 1;
+
+      return strength;
+    }
+
+    function getAbility() {
+
+      let abilities = ['bomb', 'newBall', 'life', 'black-hole', 'paddle-expand', 'atomic-bomb'];
+      let availableAbilities = [];
+
+      // every 5 colon new ability
+      for (let i = 1; i * 1 <= brickColumnCount; i += 1) {
+        availableAbilities.push(abilities[i - 1]);
+      }
+
+      // 24% percent to get ability
+      if (Math.random() > 0.76) return availableAbilities[getRandom(0, availableAbilities.length - 1)];
+      else return 'none'
+    }
+  </script>
+
+</body>
+
+</html>

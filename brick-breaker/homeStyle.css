@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css?family=Concert+One');
+
+html {
+  overflow: hidden;
+  user-select: none;
+  min-width: 420px;
+}
+
+body {
+  background: rgb(50, 50, 50);
+  padding: 0;
+  margin: 0;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.choice {
+  background-image: url('img/background.jpg');
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+
+  text-align: center;
+  margin: 0 auto;
+  width: 420px;
+  height: 750px;
+
+  font-family: 'Concert One', cursive;
+}
+
+.choice h1 {
+  font-size: 150px;
+  text-transform: uppercase;
+  line-height: 0.55;
+  color: #F1741A;
+  margin-bottom: 40px;
+}
+
+.choice h1 span {
+  font-size: 100px;
+  color: #666666;
+  border-bottom: 3px solid #666;
+  line-height: 0;
+}
+
+.choice h2 {
+  text-transform: uppercase;
+  color: #F1741A;
+  font-size: 40px;
+  line-height: 0;
+  margin-bottom: 130px;
+}
+
+.choice a {
+  font-size: 25px;
+  word-spacing: nowrap;
+  text-decoration: none;
+  width: 190px;
+  margin: 0 auto;
+  color: #fff;
+  text-transform: uppercase;
+  background-color: #6ECCC9;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+}
+
+.overlay {
+  display: flex;
+  background-color: #000;
+  width: 421.9px;
+  height: 750px;
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: calc(50%);
+  transform: translate(-50%, -50%);
+}
+
+.fade-in-overlay {
+  -webkit-animation: fade-in 400ms ease;
+  -moz-animation: fade-in 400ms ease;
+  animation: fade-in 400ms ease;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fade-in-overlay {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-out {
+  -webkit-animation: fade-out 1000ms ease-in-out;
+  -moz-animation: fade-out 1000ms ease-in-out;
+  animation: fade-out 1000ms ease-in-out;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hover-effect {
+  O% {
+    background-color: #6ECCC9;
+  }
+
+  50% {
+    background-color: #B4E4E3;
+  }
+
+  100% {
+    background-color: #6ECCC9;
+  }
+}
+
+.hover {
+  -webkit-animation: hover-effect 800ms ease-in-out;
+  -moz-animation: hover-effect 800ms ease-in-out;
+  animation: hover-effect 800ms ease-in-out;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
