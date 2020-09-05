@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+  <title>Tetris</title>
+  <style>
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      overflow: auto;
+      text-align: center;
+      background-color: #202020;
+      color: #fff;
+      font-size: 40px;
+    }
+
+    canvas {
+      height: 75vh;
+      border: solid .2em #fff;
+    }
+
+    .buttons {
+      height: 15vh;
+      width: 300px;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .button {
+      cursor: pointer;
+      width: 36px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="score" id="score"></div>
+  <canvas id="tetris" width="240" height="400"></canvas>
+  <div class="buttons">
+    <img src="arrow-left.png" class="button" id="left">
+    <img src="arrow-right.png" class="button" id="right">
+    <img src="arrow-down.png" class="button" id="down">
+    <img src="arrow-downDown.png" class="button" id="downDown">
+    <img src="rotate-64.png" alt="rotate matrix" class="button" id="rotate">
+  </div>
+  <script src="tetris.js"></script>
+</body>
+
+</html>
