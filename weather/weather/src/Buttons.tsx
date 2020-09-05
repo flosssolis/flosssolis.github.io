@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 interface IProps {
   text: string;
@@ -16,12 +16,12 @@ const BTN = styled.button`
 `;
 
 class Button extends React.Component<IProps> {
-  props: { text: any; handleClick: any; style: any };
+  // props: { text: any; handleClick: any; style: any };
   render() {
     const { text, handleClick, style } = this.props;
     return (
       <div>
-        <BTN onClick={handleClick} style={style} type="button">
+        <BTN onClick={handleClick} style={style} type='button'>
           {text}
         </BTN>
       </div>
