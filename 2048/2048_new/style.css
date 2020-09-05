@@ -1,0 +1,343 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow:hidden;
+  background: #faf8ef;
+  color: rgb(83, 56, 28);
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  user-select: none;
+}
+
+table {
+    margin: 0 auto;
+    background-color: #BBADA0;
+    padding: 5px;
+    border-radius: 5px;
+    width: auto;
+    position: relative;
+    bottom: 20px;
+    font-weight: bold;
+  }
+  
+  td {
+    text-align: center;
+    border-radius: 3px;
+    width: 100px;
+    height: 100px;
+    font-size: 3.5rem;
+  }
+
+  .text {
+    margin-right: 50px;
+  }
+
+  p {
+    text-align: center;
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #776E65;
+  }
+
+  h2 {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #776E65;
+  }
+
+  h1 {
+    font-size: 4rem;
+    line-height: 10px;
+    color: #776E65;
+    margin-right: 60px;
+  }
+
+  .newGame {
+    color: #fff;
+    background-color: #8F7A66;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px 7px;
+    border-radius: 5px;
+    border: none;
+  }
+
+  td {
+    transition: all .1s ease-in-out;
+  }
+
+  td[data-score='0'] {
+    background-color: #CDC1B4;
+  }
+
+  td[data-score='2'] {
+    background-color: #EEE4DA; 
+    color: #776E65;
+  }
+
+  td[data-score='4'] {
+    background-color: #EEE1C9;
+    color: #776E65;
+  }
+
+  td[data-score='8'] {
+    color: #F9F6F2;
+    background-color: #F3B27A;
+  }
+
+  td[data-score='16'] {
+    color: #F9F6F2;
+    background-color: #F69664;
+  }
+
+  td[data-score='32'] {
+    color: #F9F6F2;
+    background-color: #F77C5F;
+  }
+
+  td[data-score='64'] {
+    color: #F9F6F2;
+    background-color: #F75F3B;
+  }
+
+  td[data-score='128'] {
+    color: #F9F6F2;
+    background-color: #F4D86D;
+    font-size: 3.5rem;
+  }
+
+  td[data-score='256'] {
+    background-color: #F2D04B;
+    color: #F9F6F2;
+    box-shadow: 0px 0px 25px 2px rgba(240,214,128,1);
+    font-size: 3.5rem;
+  }
+
+  td[data-score='512'] {
+    background-color: #E4C02A;
+    color: #F9F6F2;
+    box-shadow: 0px 0px 25px 4px rgba(240,214,128,1);
+    font-size: 3.5rem;
+  }
+
+  td[data-score='1024'] {
+    background-color: #E3BA14;
+    color: #F9F6F2;
+    box-shadow: 0px 0px 25px 6px rgba(240,214,128,1);
+    font-size: 2rem;
+  }
+
+  td[data-score='2048'] {
+    background-color: #ECC400;
+    color: #F9F6F2;
+    box-shadow: 0px 0px 25px 10px rgba(240,214,128,1);
+    font-size: 2rem;
+  }
+
+  .pop {
+    animation: pop 200ms ease 100ms;
+    animation-fill-mode: backwards;
+  }
+
+  .appear {
+    animation: appear 200ms ease 100ms;
+    animation-fill-mode: backwards;
+  }
+
+  header {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .score-container, .description {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .description {
+    position: relative;
+    bottom: 20px;
+  }
+
+  .total-score, .best-score {
+    height: 50px;
+    width: 110px;
+    margin: 5px;
+    padding: 5px;
+    font-size: 1rem;
+
+    font-weight: bold;
+    color: #EEE4DA;
+    background-color: #BBADA0;
+    border-radius: 5px;
+
+    text-align: center;
+    position: relative;
+  }
+
+  .score, .best {
+    color: #fff;
+    font-size: 1.8rem;
+  }
+
+  .game-over, .game-win {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(238, 228, 218, 0.5);
+    z-index: 100;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: #f9f6f2;
+  }
+
+  .game-win {
+    background: rgba(237, 194, 46, 0.5);
+  }
+
+  .game-over p, .game-win p {
+    font-size: 60px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  .fade-in {
+    -webkit-animation: fade-in 800ms ease 1200ms;
+    -moz-animation: fade-in 800ms ease 1200ms;
+    animation: fade-in 800ms ease 1200ms;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  .score-addition {
+    position: absolute;
+    right: 30px;
+    color: red;
+    font-size: 25px;
+    line-height: 25px;
+    font-weight: bold;
+    color: rgba(119, 110, 101, 0.9);
+    z-index: 100;
+  }
+
+  .move-up {
+    -webkit-animation: move-up 600ms ease-in;
+    -moz-animation: move-up 600ms ease-in;
+    animation: move-up 600ms ease-in;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  @keyframes move-up {
+    0% {
+    top: 25px;
+    opacity: 1;
+    }
+
+    100% {
+        top: -50px;
+        opacity: 0;
+    }
+  }
+
+  @keyframes appear {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    transform: scale(0); }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1); } }
+
+
+@keyframes pop {
+  0% {
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    transform: scale(0); }
+
+  50% {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    transform: scale(1.2); }
+
+  100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1); } 
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    html, body {
+      font-size: 12px;
+    }
+
+    .text {
+      margin-right: 25px;
+    }
+
+    table {
+      bottom: 10px;
+    }
+
+    td {
+      width: 60px;
+      height: 60px;
+      font-size: 2rem;
+      font-weight: normal;
+    }
+    h1 {
+      margin-right: 75px;
+      font-size: 3rem;
+    }
+
+    .score, .best {
+      font-size: 1.4rem;
+    }
+
+    .total-score, .best-score {
+      width: 60px;
+      height: 30px;
+    }
+
+    .newGame {
+      word-wrap: normal;
+    }
+
+    .description {
+      bottom: 10px;
+    }
+
+    h2, p {
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    td[data-score='128'], td[data-score='256'], td[data-score='512'], td[data-score='1024'], td[data-score='2048'] {
+      font-size: 2rem;
+  }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#ECC400" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <!-- reuse same icon for Safari -->
+    <link rel="apple-touch-icon" href="logos/logo-192.png" />
+    <title>2048</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Add manifest -->
+
+    <link rel="manifest" href="manifest.json" />
+  </head>
+
+  <body>
+    <header>
+      <div class="score-container">
+        <h1>2048</h1>
+        <div class="total-score">
+          Score:
+          <br />
+          <span class="score">0</span>
+          <div class="score-addition-parent"></div>
+        </div>
+        <div class="best-score">
+          Best:
+          <br />
+          <span class="best">0</span>
+        </div>
+      </div>
+      <div class="description">
+        <div class="text">
+          <h2>Play 2048 Game Online</h2>
+          <p>Join the numbers and get to the 2048 tile</p>
+        </div>
+        <button class="newGame">New Game</button>
+      </div>
+      <div class="game-over">
+        <p>Game over, братан</p>
+        <button class="newGame">New Game</button>
+      </div>
+      <div class="game-win">
+        <p>
+          This is победа, братан. Первая часть квеста окончена, кодовое слово - приколбас. Жду его от тебя
+        </p>
+        <br />
+        <p>
+          p.s. если ты нашел это через дев тулзы - молодец ))
+        </p>
+        <button class="newGame">New Game</button>
+      </div>
+    </header>
+
+    <table id="field" cellspacing="10px"></table>
+    <p>
+      твоя задача - победить и пройти дальше, любой ценой. указания будут
+      дальше, удачи.
+    </p>
+    <p>p.s. конец это тоже часть пути</p>
+
+    <script src="swipes.js"></script>
+    <script src="Game.js"></script>
+    <script>
+      const game = new Game(size);
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker
+            .register('service-worker.js')
+            .then(
+              function(registration) {
+                // Registration was successful
+                console.log(
+                  'ServiceWorker registration successful with scope: ',
+                  registration.scope
+                );
+              },
+              function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+              }
+            )
+            .catch(function(err) {
+              console.log(err);
+            });
+        });
+      } else {
+        console.log('service worker is not supported');
+      }
+    </script>
+  </body>
+</html>
