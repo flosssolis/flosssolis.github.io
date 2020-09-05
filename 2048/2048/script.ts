@@ -184,10 +184,11 @@ class Game {
               this.currentCell.dataset.score == this.lowerCell.dataset.score &&
               count === 3
             ) {
-              this.lowerCell.innerHTML =
-                this.currentCell.innerHTML + +this.lowerCell.innerHTML;
+              
+         this.lowerCell.innerHTML =
+                String(+this.currentCell.innerHTML + +this.lowerCell.innerHTML);
               this.lowerCell.dataset.score =
-                this.currentCell.dataset.score + +this.lowerCell.dataset.score;
+                String(+this.currentCell.dataset.score + +this.lowerCell.dataset.score);
 
               this.currentCell.innerHTML = "";
               this.currentCell.dataset.score = '0';
@@ -231,9 +232,9 @@ class Game {
               count === 3
             ) {
               this.leftCell.innerHTML =
-              this.currentCell.innerHTML + this.leftCell.innerHTML;
+              String(+this.currentCell.innerHTML + +this.leftCell.innerHTML);
               this.leftCell.dataset.score =
-               this.currentCell.dataset.score + this.leftCell.dataset.score;
+               String(+this.currentCell.dataset.score + +this.leftCell.dataset.score);
 
               this.currentCell.innerHTML = "";
               this.currentCell.dataset.score = '0';
@@ -278,9 +279,9 @@ class Game {
               count === 3
             ) {
               this.rightCell.innerHTML =
-                this.currentCell.innerHTML + this.rightCell.innerHTML;
+                String(+this.currentCell.innerHTML + +this.rightCell.innerHTML);
               this.rightCell.dataset.score =
-                this.currentCell.dataset.score + this.rightCell.dataset.score;
+               String(+this.currentCell.dataset.score + +this.rightCell.dataset.score);
 
               this.currentCell.innerHTML = "";
               this.currentCell.dataset.score ='0';
