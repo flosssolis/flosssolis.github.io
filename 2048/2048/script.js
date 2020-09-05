@@ -1,10 +1,3 @@
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var table = document.getElementById("field");
 var btn = document.getElementsByClassName("newGame");
 var totalScore = document.querySelector(".score");
@@ -35,7 +28,7 @@ var Game = /** @class */ (function () {
         this.addCell = function () {
             //console.log("add cell");
             // берем все td, фильтруем свободные
-            var tds = __spreadArrays(document.querySelectorAll("td"));
+            var tds = document.querySelectorAll("td").slice();
             var cellslist = tds.filter(function (td) { return +td.dataset.score === 0; });
             // 0 свободных - проиграл
             if (cellslist.length === 0) {
@@ -128,9 +121,9 @@ var Game = /** @class */ (function () {
                             if (_this.currentCell.dataset.score == _this.lowerCell.dataset.score &&
                                 count === 3) {
                                 _this.lowerCell.innerHTML =
-                                    _this.currentCell.innerHTML + +_this.lowerCell.innerHTML;
+                                    String(+_this.currentCell.innerHTML + +_this.lowerCell.innerHTML);
                                 _this.lowerCell.dataset.score =
-                                    _this.currentCell.dataset.score + +_this.lowerCell.dataset.score;
+                                    String(+_this.currentCell.dataset.score + +_this.lowerCell.dataset.score);
                                 _this.currentCell.innerHTML = "";
                                 _this.currentCell.dataset.score = '0';
                                 score += +_this.lowerCell.dataset.score;
@@ -163,9 +156,9 @@ var Game = /** @class */ (function () {
                             if (_this.currentCell.dataset.score == _this.leftCell.dataset.score &&
                                 count === 3) {
                                 _this.leftCell.innerHTML =
-                                    _this.currentCell.innerHTML + _this.leftCell.innerHTML;
+                                    String(+_this.currentCell.innerHTML + +_this.leftCell.innerHTML);
                                 _this.leftCell.dataset.score =
-                                    _this.currentCell.dataset.score + _this.leftCell.dataset.score;
+                                    String(+_this.currentCell.dataset.score + +_this.leftCell.dataset.score);
                                 _this.currentCell.innerHTML = "";
                                 _this.currentCell.dataset.score = '0';
                                 score += +_this.leftCell.dataset.score;
@@ -198,9 +191,9 @@ var Game = /** @class */ (function () {
                             if (_this.currentCell.dataset.score == _this.rightCell.dataset.score &&
                                 count === 3) {
                                 _this.rightCell.innerHTML =
-                                    _this.currentCell.innerHTML + _this.rightCell.innerHTML;
+                                    String(+_this.currentCell.innerHTML + +_this.rightCell.innerHTML);
                                 _this.rightCell.dataset.score =
-                                    _this.currentCell.dataset.score + _this.rightCell.dataset.score;
+                                    String(+_this.currentCell.dataset.score + +_this.rightCell.dataset.score);
                                 _this.currentCell.innerHTML = "";
                                 _this.currentCell.dataset.score = '0';
                                 score += +_this.rightCell.dataset.score;
